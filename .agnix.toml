@@ -1,0 +1,45 @@
+severity = "Warning"
+target = "ClaudeCode"
+tools = ["claude-code"]
+max_files_to_validate = 10000
+
+exclude = [
+    ".git/**",
+    "node_modules/**",
+    "target/**",
+    "agent-knowledge/**",
+]
+
+[rules]
+skills = true
+hooks = true
+agents = true
+memory = true
+plugins = true
+xml = true
+mcp = true
+imports = true
+cross_platform = true
+agents_md = true
+gemini_md = true
+codex = true
+copilot = true
+cursor = true
+cline = true
+opencode = true
+prompt_engineering = true
+generic_instructions = true
+frontmatter_validation = true
+xml_balance = true
+import_references = true
+disabled_rules = []
+disabled_validators = []
+
+[tool_versions]
+
+[spec_revisions]
+
+[files]
+include_as_memory = []
+include_as_generic = []
+exclude = []

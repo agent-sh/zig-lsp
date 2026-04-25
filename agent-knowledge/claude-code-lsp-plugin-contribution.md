@@ -619,3 +619,4 @@ The `/plugin` Errors tab is the primary diagnostic surface.
 ---
 
 *This guide was synthesized from 24 sources. See `resources/claude-code-lsp-plugin-contribution-sources.json` for full source metadata.*
+</marketplace></marketplace>

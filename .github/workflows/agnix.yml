@@ -1,0 +1,26 @@
+name: agnix
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate plugin & marketplace
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run agnix
+        uses: agent-sh/agnix@v0
+        with:
+          target: claude-code
+          config: .agnix.toml
+          fail-on-error: 'true'
