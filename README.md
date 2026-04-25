@@ -30,14 +30,23 @@ Claude Code's `LSP` tool dispatches to language-specific plugins. There are 11 o
 │       ├── .lsp.json        # ZLS server config (the core file)
 │       └── README.md        # User-facing setup + troubleshooting
 ├── agent-knowledge/         # Research notes for contributors
+├── .agnix.toml              # agnix config (target: claude-code)
+├── .github/workflows/       # agnix CI on push and PR
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── CLAUDE.md / AGENTS.md    # Project memory (byte-identical)
 ├── LICENSE
 └── README.md
 ```
 
 ## Contributing
 
-Issues and PRs welcome. The research notes in [`agent-knowledge/`](agent-knowledge/) document how Claude Code integrates LSP plugins, the `.lsp.json` schema, the contribution flow, and known pitfalls — start there.
+Issues and PRs welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for local setup, validation, and the version-bump policy. The research notes in [`agent-knowledge/`](agent-knowledge/) document how Claude Code integrates LSP plugins, the `.lsp.json` schema, the contribution flow, and known pitfalls — useful background before opening a substantial PR.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md). Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## License
 
-MIT.
+MIT — see [LICENSE](LICENSE).
