@@ -1,5 +1,8 @@
 {
   "name": "agent-sh",
+  "metadata": {
+    "description": "agent-sh marketplace for Claude Code — LSP plugins and developer tooling for AI-powered research and development."
+  },
   "owner": {
     "name": "agent-sh",
     "email": "aviarchi1994@gmail.com",
