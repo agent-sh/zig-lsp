@@ -1,0 +1,15 @@
+{
+  "name": "agent-sh",
+  "owner": {
+    "name": "agent-sh",
+    "email": "aviarchi1994@gmail.com",
+    "url": "https://github.com/agent-sh"
+  },
+  "plugins": [
+    {
+      "name": "zig-lsp",
+      "source": "./plugins/zig-lsp",
+      "description": "Zig language server for Claude Code via ZLS"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "zig": {
+    "command": "zls",
+    "extensionToLanguage": {
+      ".zig": "zig",
+      ".zon": "zig"
+    },
+    "initializationOptions": {
+      "enable_snippets": true,
+      "enable_argument_placeholders": true,
+      "enable_build_on_save": true,
+      "build_on_save_args": [],
+      "semantic_tokens": "full",
+      "inlay_hints_show_variable_type_hints": true,
+      "inlay_hints_show_parameter_name": true,
+      "prefer_ast_check_as_child_process": true
+    },
+    "startupTimeout": 30000,
+    "restartOnCrash": true,
+    "maxRestarts": 3
+  }
+}

@@ -1,0 +1,548 @@
+{
+  "topic": "How Claude Code integrates new LSP plugins, and the contribution path for adding one (specifically: a Zig / zls LSP plugin)",
+  "slug": "claude-code-lsp-plugin-contribution",
+  "generated": "2026-04-26T00:00:00Z",
+  "depth": "medium",
+  "totalSources": 24,
+  "sources": [
+    {
+      "url": "https://code.claude.com/docs/en/plugins-reference",
+      "title": "Plugins Reference — Claude Code Docs",
+      "qualityScore": 98,
+      "scores": {
+        "authority": 10,
+        "recency": 10,
+        "depth": 10,
+        "examples": 10,
+        "uniqueness": 8
+      },
+      "keyInsights": [
+        "Full .lsp.json schema with all fields and types",
+        "Plugin directory structure reference",
+        "All optional LSP fields: args, transport, env, initializationOptions, settings, workspaceFolder, startupTimeout, shutdownTimeout, restartOnCrash, maxRestarts",
+        "Plugin manifest schema (plugin.json) all fields",
+        "CLI commands reference: plugin install/uninstall/enable/disable/validate",
+        "Debug commands: claude --debug, /plugin Errors tab, claude plugin validate"
+      ],
+      "codeExamples": [
+        { "language": "json", "description": "Minimal .lsp.json for gopls" },
+        { "language": "json", "description": "Complete plugin.json manifest schema" },
+        { "language": "json", "description": "marketplace.json schema" }
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins",
+      "title": "Create Plugins — Claude Code Docs",
+      "qualityScore": 96,
+      "scores": {
+        "authority": 10,
+        "recency": 10,
+        "depth": 9,
+        "examples": 10,
+        "uniqueness": 7
+      },
+      "keyInsights": [
+        "Plugin directory structure with .claude-plugin/ containing only plugin.json",
+        ".lsp.json goes at plugin root, not inside .claude-plugin/",
+        "Test with --plugin-dir flag: claude --plugin-dir ./my-plugin",
+        "Submit to official marketplace via claude.ai/settings/plugins/submit or platform.claude.com/plugins/submit",
+        "/reload-plugins command for hot-reload during development",
+        "LSP plugins belong in plugins/ for official Anthropic or external_plugins/ for third-party"
+      ],
+      "codeExamples": [
+        { "language": "bash", "description": "claude --plugin-dir for sideloading" },
+        { "language": "json", "description": "gopls .lsp.json example" }
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/discover-plugins",
+      "title": "Discover and Install Plugins — Claude Code Docs",
+      "qualityScore": 94,
+      "scores": {
+        "authority": 10,
+        "recency": 10,
+        "depth": 8,
+        "examples": 9,
+        "uniqueness": 7
+      },
+      "keyInsights": [
+        "Official marketplace auto-available as claude-plugins-official",
+        "All 11 official LSP plugins listed with binary requirements",
+        "ruby-lsp also appears in directory listing (12th plugin?)",
+        "Plugin install scopes: user, project, local, managed",
+        "/plugin marketplace add command syntax for github, git URL, local path, remote URL",
+        "LSP diagnostic hook behavior: automatic after every file edit, no contributor wiring needed"
+      ],
+      "codeExamples": [
+        { "language": "shell", "description": "/plugin install and marketplace add commands" }
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugin-marketplaces",
+      "title": "Create and Distribute a Plugin Marketplace — Claude Code Docs",
+      "qualityScore": 93,
+      "scores": {
+        "authority": 10,
+        "recency": 10,
+        "depth": 8,
+        "examples": 9,
+        "uniqueness": 7
+      },
+      "keyInsights": [
+        "marketplace.json schema: name, owner, plugins array, metadata.pluginRoot",
+        "Plugin entry required fields: name, source",
+        "Source types: local path (./), github (owner/repo), git URL, npm",
+        "Reserved marketplace names list",
+        "strict: false in marketplace entry allows inline lspServers without a plugin directory — but this is the pattern that caused Issue #379",
+        "Version management: explicit version in plugin.json vs git commit SHA"
+      ],
+      "codeExamples": [
+        { "language": "json", "description": "marketplace.json structure" },
+        { "language": "shell", "description": "Local marketplace walkthrough" }
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://github.com/anthropics/claude-plugins-official",
+      "title": "anthropics/claude-plugins-official — Official Plugin Directory",
+      "qualityScore": 92,
+      "scores": {
+        "authority": 10,
+        "recency": 10,
+        "depth": 7,
+        "examples": 7,
+        "uniqueness": 8
+      },
+      "keyInsights": [
+        "Repository structure: plugins/ (Anthropic-internal), external_plugins/ (third-party)",
+        "33 plugins total in plugins/ directory including 11 LSP plugins + ruby-lsp",
+        "Submission via form at https://clau.de/plugin-directory-submission",
+        "Quality and security review required before approval",
+        "No open PR-based contribution — form-gated process",
+        "Each plugin requires .claude-plugin/plugin.json, .lsp.json at root, README.md"
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://github.com/anthropics/claude-plugins-official/pull/378",
+      "title": "PR #378 — Add .lsp.json files to all LSP plugin directories",
+      "qualityScore": 95,
+      "scores": {
+        "authority": 10,
+        "recency": 10,
+        "depth": 9,
+        "examples": 10,
+        "uniqueness": 9
+      },
+      "keyInsights": [
+        "All 11 official LSP plugins were missing .lsp.json — only had README.md",
+        "lspServers in marketplace.json is NOT copied to plugin cache — must be in plugin directory",
+        "Exact .lsp.json content for all 11 official plugins revealed",
+        "jdtls and kotlin have startupTimeout: 120000 (JVM startup)",
+        "gopls and rust-analyzer have no startupTimeout (fast native binaries)",
+        "pyright and typescript use args: ['--stdio']",
+        "clangd uses args: ['--background-index']"
+      ],
+      "codeExamples": [
+        { "language": "json", "description": "gopls-lsp .lsp.json" },
+        { "language": "json", "description": "rust-analyzer-lsp .lsp.json" },
+        { "language": "json", "description": "typescript-lsp .lsp.json" },
+        { "language": "json", "description": "jdtls-lsp .lsp.json with startupTimeout" }
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://github.com/anthropics/claude-plugins-official/issues/379",
+      "title": "Issue #379 — All LSP plugins missing .lsp.json",
+      "qualityScore": 90,
+      "scores": {
+        "authority": 9,
+        "recency": 10,
+        "depth": 8,
+        "examples": 8,
+        "uniqueness": 9
+      },
+      "keyInsights": [
+        "Affects every user of any official LSP plugin",
+        "Root cause: installer copies only source directory, not marketplace.json inline config",
+        "Multiple related issues: claude-code#15235, #16291, #15148, #14803",
+        "PR #378 is the fix — add physical .lsp.json to each plugin directory",
+        "Critical learning: never rely on lspServers in marketplace.json alone"
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://github.com/anthropics/claude-code/issues/14803",
+      "title": "Issue #14803 — LSP plugins not recognized despite correct config",
+      "qualityScore": 88,
+      "scores": {
+        "authority": 9,
+        "recency": 9,
+        "depth": 8,
+        "examples": 7,
+        "uniqueness": 8
+      },
+      "keyInsights": [
+        "Symptom: No LSP server available for file type even with correct plugin",
+        "Debug: check --debug output for Total LSP servers loaded: N",
+        "--enable-lsp-logging flag; logs at ~/.claude/debug/lsp-*.log",
+        "Expected cache structure: ~/.claude/plugins/cache/claude-plugins-official/",
+        "Community workaround: Piebald-AI/claude-code-lsps with tweakcc patch",
+        "Issue is closed — fixed in later Claude Code versions"
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://github.com/4rgon4ut/cc-zig-lsp",
+      "title": "cc-zig-lsp — Community Zig LSP Plugin for Claude Code",
+      "qualityScore": 88,
+      "scores": {
+        "authority": 7,
+        "recency": 10,
+        "depth": 8,
+        "examples": 9,
+        "uniqueness": 10
+      },
+      "keyInsights": [
+        "Complete .lsp.json: command: zls, .zig/.zon to zig, initializationOptions with enable_snippets/enable_import_analysis, maxRestarts: 3",
+        "plugin.json structure with lspServers pointer",
+        "Auto-install hooks: downloads zls if not found in PATH",
+        "Version detection from build.zig.zon, .zigversion, zig version command",
+        "ZLS cache at ~/.local/share/zls/, symlink at ~/.local/bin/zls",
+        "Platform support: macOS and Linux (x86_64, aarch64) — no Windows"
+      ],
+      "codeExamples": [
+        { "language": "json", "description": ".lsp.json for zig" },
+        { "language": "json", "description": "plugin.json for zig-lsp" }
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://github.com/Piebald-AI/claude-code-lsps",
+      "title": "Piebald-AI/claude-code-lsps — Community LSP Marketplace",
+      "qualityScore": 82,
+      "scores": {
+        "authority": 7,
+        "recency": 10,
+        "depth": 7,
+        "examples": 8,
+        "uniqueness": 8
+      },
+      "keyInsights": [
+        "40+ language server plugins, no Zig/ZLS included (contribution opportunity)",
+        ".lsp.json is canonical source; marketplace.json lspServers generated from it",
+        "Do not hand-edit generated lspServers blocks",
+        "Validation scripts sync .lsp.json to marketplace.json",
+        "Targets Claude Code 2.1.50+",
+        "Correct pattern: .lsp.json at plugin root, marketplace.json auto-generated"
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://github.com/zigtools/zls",
+      "title": "zigtools/zls — Zig Language Server",
+      "qualityScore": 92,
+      "scores": {
+        "authority": 9,
+        "recency": 10,
+        "depth": 8,
+        "examples": 7,
+        "uniqueness": 8
+      },
+      "keyInsights": [
+        "Binary name: zls (zls.exe on Windows)",
+        "Supported: completions, hover, goto definition/declaration, document symbols, find references, rename, formatting (zig fmt), semantic tokens, inlay hints, code actions, selection ranges, folding",
+        "Limitation: comptime analysis is Work-in-Progress",
+        "Configuration via schema.json — delivered in initializationOptions",
+        "Must match Zig version exactly"
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://zigtools.org/zls/install/",
+      "title": "ZLS Installation Guide — zigtools",
+      "qualityScore": 88,
+      "scores": {
+        "authority": 9,
+        "recency": 10,
+        "depth": 7,
+        "examples": 7,
+        "uniqueness": 7
+      },
+      "keyInsights": [
+        "Prebuilt binaries are signed with minisign key RWR+9B91GBZ0zOjh6Lr17+zKf5BoSuFvrx2xSeDE57uIYvnKBGmMjOex",
+        "Tagged releases must pair with matching ZLS tagged releases",
+        "Installation tool resolves compatible versions automatically",
+        "VS Code extension can manage both Zig and ZLS install — most reliable method"
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://github.com/zigtools/zls/blob/master/schema.json",
+      "title": "ZLS schema.json — All Configuration Keys",
+      "qualityScore": 95,
+      "scores": {
+        "authority": 9,
+        "recency": 10,
+        "depth": 10,
+        "examples": 8,
+        "uniqueness": 9
+      },
+      "keyInsights": [
+        "enable_snippets (bool, true): enables snippet completions",
+        "enable_argument_placeholders (bool, true): function argument placeholder completions",
+        "enable_build_on_save (bool, null): enables build-on-save diagnostics",
+        "build_on_save_args (array, []): args for zig build during save",
+        "semantic_tokens (enum: none/partial/full, full): level of semantic tokens",
+        "inlay_hints_show_variable_type_hints (bool, true)",
+        "inlay_hints_show_parameter_name (bool, true)",
+        "prefer_ast_check_as_child_process (bool, true): use zig ast-check",
+        "zig_exe_path (string, null): override zig executable path",
+        "zig_lib_path (string, null): override zig library path",
+        "warn_style (bool, false): style guideline warnings",
+        "force_autofix (bool, false): workaround for editors lacking source.fixall"
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://kristoff.it/blog/improving-your-zls-experience/",
+      "title": "Improving Your ZLS Experience — Loris Cro",
+      "qualityScore": 85,
+      "scores": {
+        "authority": 8,
+        "recency": 8,
+        "depth": 8,
+        "examples": 9,
+        "uniqueness": 9
+      },
+      "keyInsights": [
+        "enable_build_on_save + build_on_save_step: check is the key config for compilation errors",
+        "build_on_save step in build.zig: addExecutable without installArtifact triggers -fno-emit-bin, skips LLVM, fast diagnostics",
+        "Without build_on_save, only parser/syntax errors, not type errors",
+        "zls --show-config-path reveals config file location",
+        "Config file location: Linux ~/.config/zls.json, macOS Application Support folder",
+        "Restart editor AND zls after config changes"
+      ],
+      "codeExamples": [
+        { "language": "zig", "description": "build.zig check step for fast build-on-save" },
+        { "language": "json", "description": "zls.json config for build_on_save" }
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://dev.classmethod.jp/en/articles/claude-code-lsp-from-local-marketplace/",
+      "title": "Using Claude Code LSP Without the Official Marketplace",
+      "qualityScore": 78,
+      "scores": {
+        "authority": 6,
+        "recency": 9,
+        "depth": 7,
+        "examples": 8,
+        "uniqueness": 8
+      },
+      "keyInsights": [
+        "Complete local marketplace workflow without official marketplace",
+        "strict: false in marketplace.json allows defining plugins inline (but avoid — see Issue #379)",
+        "source field must point to a valid directory even with strict: false",
+        "JSON Schema 404 on validation — ignore this error",
+        "Enable LSP in .claude/settings.json if needed",
+        "/plugin marketplace add ./.your-claude-marketplace syntax"
+      ],
+      "codeExamples": [
+        { "language": "json", "description": "Local marketplace.json with inline lspServers" }
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://github.com/anthropics/claude-code/blob/main/plugins/README.md",
+      "title": "claude-code/plugins README",
+      "qualityScore": 80,
+      "scores": {
+        "authority": 10,
+        "recency": 10,
+        "depth": 5,
+        "examples": 5,
+        "uniqueness": 5
+      },
+      "keyInsights": [
+        "Demo marketplace (claude-code-plugins) separate from official marketplace",
+        "Add with: /plugin marketplace add anthropics/claude-code",
+        "Demo plugins include: commit-commands, code-review, feature-dev, etc.",
+        "These are examples of non-LSP plugins for reference"
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://github.com/anthropics/claude-plugins-official/blob/main/.claude-plugin/marketplace.json",
+      "title": "claude-plugins-official marketplace.json",
+      "qualityScore": 88,
+      "scores": {
+        "authority": 10,
+        "recency": 10,
+        "depth": 7,
+        "examples": 8,
+        "uniqueness": 7
+      },
+      "keyInsights": [
+        "gopls-lsp marketplace entry: source ./plugins/gopls-lsp, strict: false, lspServers inline",
+        "Schema: anthropic.com/claude-code/marketplace.schema.json",
+        "Official marketplace name: claude-plugins-official",
+        "1932 lines, ~81 KB — large file with 100+ external plugins"
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://github.com/zircote/lsp-marketplace",
+      "title": "zircote/lsp-marketplace — 28 LSP-enabled Claude Code Plugins",
+      "qualityScore": 72,
+      "scores": {
+        "authority": 6,
+        "recency": 9,
+        "depth": 6,
+        "examples": 7,
+        "uniqueness": 7
+      },
+      "keyInsights": [
+        "28 LSP plugins available in community marketplace",
+        "Includes automated code quality hooks",
+        "Alternative to official marketplace for LSP needs"
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://github.com/Piebald-AI/claude-code-lsps/blob/main/CLAUDE.md",
+      "title": "claude-code-lsps CLAUDE.md — Project Guidelines",
+      "qualityScore": 80,
+      "scores": {
+        "authority": 7,
+        "recency": 10,
+        "depth": 7,
+        "examples": 6,
+        "uniqueness": 8
+      },
+      "keyInsights": [
+        ".lsp.json is authoritative source for LSP config in this marketplace",
+        "marketplace.json lspServers sections are generated, not hand-edited",
+        "Validation scripts ensure consistency",
+        "plugin.json, .lsp.json are required per plugin",
+        "startupTimeout used for slow servers"
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://github.com/4rgon4ut/cc-zig-lsp/blob/main/.claude-plugin/plugin.json",
+      "title": "cc-zig-lsp plugin.json",
+      "qualityScore": 85,
+      "scores": {
+        "authority": 7,
+        "recency": 10,
+        "depth": 6,
+        "examples": 9,
+        "uniqueness": 9
+      },
+      "keyInsights": [
+        "name: zig-lsp",
+        "lspServers: ./.lsp.json pointer pattern",
+        "keywords: zig, lsp, zls, language-server",
+        "version: 0.1.0",
+        "repository field for discoverability"
+      ],
+      "codeExamples": [
+        { "language": "json", "description": "Complete plugin.json for zig-lsp" }
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://github.com/4rgon4ut/cc-zig-lsp/blob/main/.lsp.json",
+      "title": "cc-zig-lsp .lsp.json",
+      "qualityScore": 90,
+      "scores": {
+        "authority": 7,
+        "recency": 10,
+        "depth": 7,
+        "examples": 10,
+        "uniqueness": 10
+      },
+      "keyInsights": [
+        "command: zls",
+        "extensions: .zig and .zon both map to zig language",
+        "initializationOptions: enable_snippets, enable_import_analysis",
+        "maxRestarts: 3",
+        "No startupTimeout (fast binary)"
+      ],
+      "codeExamples": [
+        { "language": "json", "description": "Complete .lsp.json for zls" }
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://www.datacamp.com/tutorial/how-to-build-claude-code-plugins",
+      "title": "How to Build Claude Code Plugins — DataCamp",
+      "qualityScore": 70,
+      "scores": {
+        "authority": 6,
+        "recency": 9,
+        "depth": 6,
+        "examples": 7,
+        "uniqueness": 5
+      },
+      "keyInsights": [
+        "Step-by-step plugin creation walkthrough",
+        "Confirms --plugin-dir for local testing",
+        "Confirms /reload-plugins for hot-reload"
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://github.com/zigtools/zls/discussions/1715",
+      "title": "ZLS Setup Discussion #1715",
+      "qualityScore": 72,
+      "scores": {
+        "authority": 7,
+        "recency": 8,
+        "depth": 6,
+        "examples": 6,
+        "uniqueness": 7
+      },
+      "keyInsights": [
+        "Binary name is zls.exe on Windows, zls everywhere else",
+        "PATH setup: add zls directory to system PATH",
+        "Common issue: command not found when PATH not set",
+        "VS Code extension is most reliable install method"
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    },
+    {
+      "url": "https://github.com/anthropics/claude-plugins-official/pull/378/files",
+      "title": "PR #378 Files — Authoritative .lsp.json Content for All 11 Official LSP Plugins",
+      "qualityScore": 97,
+      "scores": {
+        "authority": 10,
+        "recency": 10,
+        "depth": 10,
+        "examples": 10,
+        "uniqueness": 9
+      },
+      "keyInsights": [
+        "clangd: args --background-index, 9 file extensions",
+        "csharp-ls: minimal, no args",
+        "gopls: minimal, no args, no startupTimeout",
+        "jdtls: startupTimeout 120000",
+        "kotlin-lsp: args --stdio, startupTimeout 120000",
+        "lua-language-server: command lua-language-server",
+        "intelephense: args --stdio",
+        "pyright-langserver: args --stdio, .py and .pyi",
+        "rust-analyzer: minimal, no args, no timeout",
+        "sourcekit-lsp: minimal",
+        "typescript-language-server: args --stdio, 8 file extensions"
+      ],
+      "codeExamples": [
+        { "language": "json", "description": "All 11 official plugin .lsp.json files" }
+      ],
+      "extractedAt": "2026-04-26T00:00:00Z"
+    }
+  ]
+}
