@@ -36,7 +36,7 @@ agnix --target claude-code                 # config drift across the repo
 
 | Change | Bump |
 |---|---|
-| Bug fix in `.lsp.json` defaults that doesn't change behaviour for correct setups | patch (`0.1.0` -> `0.1.1`) |
+| Bug fix in `lspServers` defaults that doesn't change behaviour for correct setups | patch (`0.1.0` -> `0.1.1`) |
 | New `initializationOptions`, new mapped extension, defaults that change observable behaviour | minor (`0.1.0` -> `0.2.0`) |
 | Schema break (renaming the server key, removing options) | major (`0.x` -> `1.0`) |
 
@@ -44,7 +44,7 @@ Update `CHANGELOG.md` in the same PR. Keep entries under the `## [Unreleased]` h
 
 ## Plugin shape - non-negotiables
 
-1. `.lsp.json` lives at the **plugin root** (`plugins/zig-lsp/.lsp.json`), not inside `.claude-plugin/`. Putting it inside `.claude-plugin/` silently breaks loading.
+1. **LSP server config is inline in `marketplace.json`'s `lspServers` field**, on the plugin entry. NOT in a separate `.lsp.json` file - that mechanism doesn't exist in Claude Code's loader. The 12 official LSP plugins (typescript-lsp, rust-analyzer-lsp, etc.) all follow this pattern: their plugin source dirs ship only README + LICENSE; the `lspServers` block lives next to `description`/`version` in the marketplace entry.
 2. The `command` field is `"zls"` - a PATH-resolved binary name. Never embed an absolute path; users install the binary themselves.
 3. `extensionToLanguage` maps both `.zig` and `.zon` to language ID `"zig"`. Don't drop `.zon` - `build.zig.zon` needs LSP support.
 4. `CLAUDE.md` and `AGENTS.md` are mirrored byte-identically. When editing one, update the other in the same commit.

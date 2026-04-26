@@ -8,7 +8,7 @@
 
 ## Plugins
 
-- zig-lsp - thin `.lsp.json` manifest pointing at user-installed `zls`
+- zig-lsp - registered via `lspServers` inline in `.claude-plugin/marketplace.json`, dispatching to user-installed `zls`
 
 ## Commands
 
@@ -27,10 +27,10 @@ None. This is a config-only plugin - no slash commands, no agents, no skills.
 
 ## Plugin shape - non-negotiables
 
-1. `.lsp.json` lives at the **plugin root** (`plugins/zig-lsp/.lsp.json`), not inside `.claude-plugin/`. Putting it inside `.claude-plugin/` silently breaks loading.
+1. **LSP server config lives in `marketplace.json`'s `lspServers` field**, inline on the plugin entry. NOT in a separate `.lsp.json` file at the plugin root - that mechanism does not exist in Claude Code's loader. Verified by inspecting the 12 official LSP plugins under `claude-plugins-official/.claude-plugin/marketplace.json`; their plugin source dirs ship only README + LICENSE.
 2. The `command` field is `"zls"` - a PATH-resolved binary name. Never embed an absolute path; users install the binary themselves.
 3. `extensionToLanguage` maps both `.zig` and `.zon` to language ID `"zig"`. Don't drop `.zon` - the package manifest needs LSP support.
-4. Bumping `zls` defaults in `.lsp.json` is a user-facing change - update CHANGELOG and bump the plugin `version` in `plugin.json`.
+4. Bumping `zls` defaults in `lspServers` is a user-facing change - update CHANGELOG and bump the plugin `version` in `plugin.json`.
 
 ## Validation
 

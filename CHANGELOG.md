@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **LSP server config now actually registers with Claude Code.** Empirical inspection of the 12 working official LSP plugins (typescript-lsp, rust-analyzer-lsp, etc.) showed the LSP loader reads `lspServers` *inline on the marketplace.json plugin entry* — not from a separate `.lsp.json` at the plugin root, as the research doc claimed. Moved the ZLS server config into `.claude-plugin/marketplace.json`'s zig-lsp entry; deleted `plugins/zig-lsp/.lsp.json`. Same content, correct location.
+
+### Changed
+- `agent-knowledge/claude-code-lsp-plugin-contribution.md` carries a prominent correction block at the top documenting the loader-mechanism discovery; original sections are kept as historical record.
+- `CLAUDE.md` / `AGENTS.md` / `CONTRIBUTING.md` "non-negotiables" rewritten to reflect the marketplace-level `lspServers` mechanism.
+- Top-level `README.md` repo layout updated.
+
 ## [0.1.0] - 2026-04-26
 
 ### Added
