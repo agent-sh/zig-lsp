@@ -4,27 +4,32 @@
 **Sources**: 24 resources analyzed
 **Depth**: medium
 
-> ## ⚠ CORRECTION — original research doc was wrong about the loader mechanism
+> ## ⚠ CORRECTION — empirical investigation reshaped these facts twice
 >
-> The original "Key facts" said the plugin needs `.lsp.json` at the plugin root, citing PR #378. **That is not how Claude Code's LSP loader actually works.** Verified empirically by inspecting the 12 working official LSP plugins under `~/.claude/plugins/marketplaces/claude-plugins-official/`:
+> The original "Key facts" said the plugin needs `.lsp.json` at the plugin root, citing PR #378. After empirical testing on Claude Code v2.1.119 we now have the *actual* picture, which differs from both the research doc AND the official Anthropic docs in subtle ways. Two paths exist, and you need both for a third-party LSP plugin to work:
 >
-> - Their plugin source dirs (`plugins/typescript-lsp/`, `plugins/rust-analyzer-lsp/`, etc.) ship **only `README.md` + `LICENSE`** — no `.claude-plugin/`, no `.lsp.json`.
-> - The actual LSP server config lives **inline** in `marketplace.json`'s plugin entry, in a top-level `lspServers` field — alongside `name`, `description`, `version`, `source`.
-> - The `lspServers` schema is identical to what the original research doc described (server name → `command` / `args` / `extensionToLanguage` / `initializationOptions` / `startupTimeout` / etc.). It just lives in a different file.
-> - PR #378 may have been an aspirational change that was never merged or was rolled back. Don't trust the research doc on the `.lsp.json` claim.
+> **The official LSP plugins** (typescript-lsp, rust-analyzer-lsp, etc., 12 of them in `claude-plugins-official`):
+> - Plugin source dirs ship only `README.md` + `LICENSE` — no `.claude-plugin/plugin.json`, no `.lsp.json`.
+> - `marketplace.json`'s plugin entry has `lspServers` inline alongside `name`/`description`/`version`/`source`.
+> - These plugins load via a hardcoded code path inside the Claude Code binary that's wired specifically for the official marketplace name.
 >
-> **What this means for a contributor:**
+> **Third-party LSP plugins** (anything not under `claude-plugins-official`):
+> - Must ship `.lsp.json` at the plugin root in the source repo. This file gets copied into the user's `~/.claude/plugins/cache/<marketplace>/<plugin>/<version>/` on install.
+> - The runtime LSP loader reads `.lsp.json` from that cached path. **That's what actually registers the server.**
+> - `lspServers` in marketplace.json is metadata for the marketplace UI / future-proofing — empirically not what triggers loading for non-`claude-plugins-official` plugins. Keep it anyway, identical to the `.lsp.json` content.
+> - Open Anthropic issues describing related bugs and dead-code paths: [#15521](https://github.com/anthropics/claude-code/issues/15521), [#31468](https://github.com/anthropics/claude-code/issues/31468). The picture there is incomplete — `.lsp.json` empirically does work for third parties on v2.1.119.
 >
-> | Old (wrong) claim | Reality |
+> **Empirical evidence (this repo, this session, v2.1.119):**
+>
+> | State | Result |
 > | --- | --- |
-> | Ship `.lsp.json` at plugin root | Don't ship `.lsp.json` at all — Claude Code ignores it |
-> | Plugin needs `.claude-plugin/plugin.json` | Optional — official LSP plugins don't ship it. We keep it for identity metadata only |
-> | LSP config is plugin-local | LSP config is marketplace-local (lives in marketplace.json `lspServers`) |
-> | Test with `claude --plugin-dir <plugin>` | Test by registering a marketplace and installing — `--plugin-dir` may not exercise the marketplace-side `lspServers` loader |
+> | Plugin in `agent-sh` marketplace, only `lspServers` in marketplace.json (no `.lsp.json`) | Silently skipped. `Checking plugin zig-lsp` appears in debug log, no `Loaded ... LSP server(s)` line follows. |
+> | Same plugin replicated under `claude-plugins-official` marketplace cache | Loads. Hardcoded path. |
+> | Plugin in `agent-sh` marketplace WITH `.lsp.json` at plugin root → cached in install dir | **Loads.** `Loaded 1 LSP server(s) from plugin: zig-lsp`. |
 >
-> **Updated key facts**: A working LSP plugin is 1 marketplace-level file (`.claude-plugin/marketplace.json` with `lspServers` inline on the plugin entry) + at minimum `README.md` in the plugin source dir. Binary name is `zls`. Extensions: `.zig` and `.zon` → language `"zig"`. Official marketplace submission is form-gated (not PR-based).
+> **Updated key facts (canonical):** A working third-party LSP plugin ships `.lsp.json` at the plugin root + an `lspServers` block in `.claude-plugin/marketplace.json` (kept byte-equivalent on server config) + a `plugin.json` for identity metadata + `README.md`. Binary name `zls`. Extensions `.zig` and `.zon` → language `"zig"`. Submission to the official marketplace is form-gated at <https://clau.de/plugin-directory-submission>.
 >
-> The sections below are kept verbatim with the original `.lsp.json` framing as historical record. Refer to `CONTRIBUTING.md` and `CLAUDE.md` in this repo for the corrected, currently-accurate guidance.
+> The sections below are kept verbatim with the original `.lsp.json`-only framing as historical record. Refer to `CONTRIBUTING.md` and `CLAUDE.md` in this repo for the corrected, currently-accurate guidance.
 
 ---
 

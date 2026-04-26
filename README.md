@@ -29,6 +29,9 @@ Claude Code's `LSP` tool dispatches to language-specific plugins. There are 11 o
 │   └── zig-lsp/
 │       ├── .claude-plugin/
 │       │   └── plugin.json  # Plugin identity (name, version, license)
+│       ├── .lsp.json        # ZLS server config — copied to user's
+│       │                      cache on install; this is what the
+│       │                      LSP runtime loader actually reads
 │       └── README.md        # User-facing setup + troubleshooting
 ├── agent-knowledge/         # Research notes for contributors
 ├── .agnix.toml              # agnix config (target: claude-code)
