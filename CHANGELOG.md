@@ -8,12 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
-- **LSP server config now actually registers with Claude Code.** Empirical inspection of the 12 working official LSP plugins (typescript-lsp, rust-analyzer-lsp, etc.) showed the LSP loader reads `lspServers` *inline on the marketplace.json plugin entry* — not from a separate `.lsp.json` at the plugin root, as the research doc claimed. Moved the ZLS server config into `.claude-plugin/marketplace.json`'s zig-lsp entry; deleted `plugins/zig-lsp/.lsp.json`. Same content, correct location.
+- **`.lsp.json` restored at plugin root.** Empirical testing on Claude Code v2.1.119 showed third-party LSP plugins need both: an `lspServers` block in `marketplace.json` (matches official-plugin shape) AND a `.lsp.json` file at the plugin root (this is what the runtime loader actually reads from the cached install directory). The previous round of changes deleted `.lsp.json` based on an incorrect inference from the official LSP plugins' minimal source layout — those plugins use a separate hardcoded loader path that doesn't apply to third parties. With `.lsp.json` shipped, `claude --debug` logs `Loaded 1 LSP server(s) from plugin: zig-lsp`. Without it, the loader silently skips the entry.
 
 ### Changed
-- `agent-knowledge/claude-code-lsp-plugin-contribution.md` carries a prominent correction block at the top documenting the loader-mechanism discovery; original sections are kept as historical record.
-- `CLAUDE.md` / `AGENTS.md` / `CONTRIBUTING.md` "non-negotiables" rewritten to reflect the marketplace-level `lspServers` mechanism.
-- Top-level `README.md` repo layout updated.
+- `agent-knowledge/claude-code-lsp-plugin-contribution.md` correction block expanded with the two-path picture (official hardcoded vs third-party `.lsp.json`) and the empirical evidence table.
+- `CLAUDE.md` / `AGENTS.md` / `CONTRIBUTING.md` "non-negotiables" updated: `.lsp.json` and marketplace `lspServers` are both required, kept byte-equivalent on server config.
+- Top-level `README.md` repo layout reflects `.lsp.json` back in the plugin source.
 
 ## [0.1.0] - 2026-04-26
 

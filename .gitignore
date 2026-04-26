@@ -3,5 +3,6 @@ Thumbs.db
 *.log
 .idea/
 .vscode/
+.claude/settings.local.json
 zig-cache/
 zig-out/
