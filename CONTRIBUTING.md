@@ -45,10 +45,11 @@ Update `CHANGELOG.md` in the same PR. Keep entries under the `## [Unreleased]` h
 ## Plugin shape - non-negotiables
 
 1. **Ship `.lsp.json` at the plugin root** (`plugins/zig-lsp/.lsp.json`) AND keep an `lspServers` block inline in `.claude-plugin/marketplace.json`. Both are required for a third-party LSP plugin: the runtime loader reads `.lsp.json` from the user's cached install (this is what makes the LSP register on Claude Code v2.1.119); the marketplace `lspServers` field is metadata for the marketplace UI and matches what official plugins ship. Official LSP plugins (typescript-lsp, rust-analyzer-lsp) load via a separate hardcoded code path inside the Claude Code binary and don't ship `.lsp.json` themselves; that path doesn't apply to third parties.
-2. The `command` field is `"zls"` - a PATH-resolved binary name. Never embed an absolute path; users install the binary themselves.
-3. `extensionToLanguage` maps both `.zig` and `.zon` to language ID `"zig"`. Don't drop `.zon` - `build.zig.zon` needs LSP support.
-4. Keep `.lsp.json` and the `lspServers` block in `marketplace.json` byte-equal on the server config. If they drift, behavior depends on which file the loader picks up first.
-5. `CLAUDE.md` and `AGENTS.md` are mirrored byte-identically. When editing one, update the other in the same commit.
+2. **Do not include `restartOnCrash` or `maxRestarts`.** The plugins reference docs them, but the loader rejects them with `"restartOnCrash is not yet implemented. Remove this field from the configuration."` and the entire LSP server fails to initialize. `startupTimeout` works; the other lifecycle fields don't. Re-add when Claude Code ships them.
+3. The `command` field is `"zls"` - a PATH-resolved binary name. Never embed an absolute path; users install the binary themselves.
+4. `extensionToLanguage` maps both `.zig` and `.zon` to language ID `"zig"`. Don't drop `.zon` - `build.zig.zon` needs LSP support.
+5. Keep `.lsp.json` and the `lspServers` block in `marketplace.json` byte-equal on the server config. If they drift, behavior depends on which file the loader picks up first.
+6. `CLAUDE.md` and `AGENTS.md` are mirrored byte-identically. When editing one, update the other in the same commit.
 
 ## Style
 

@@ -12,7 +12,7 @@
     {
       "name": "zig-lsp",
       "description": "Zig language server for Claude Code via ZLS",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "author": {
         "name": "agent-sh",
         "email": "aviarchi1994@gmail.com",
@@ -38,9 +38,7 @@
             "inlay_hints_show_parameter_name": true,
             "prefer_ast_check_as_child_process": true
           },
-          "startupTimeout": 30000,
-          "restartOnCrash": true,
-          "maxRestarts": 3
+          "startupTimeout": 30000
         }
       }
     }

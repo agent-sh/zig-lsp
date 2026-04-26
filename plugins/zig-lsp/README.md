@@ -80,12 +80,12 @@ Defaults set by this plugin:
 | `inlay_hints_show_parameter_name` | `true` | Inline parameter names at call sites |
 | `prefer_ast_check_as_child_process` | `true` | Faster, more accurate parser-level errors |
 | `startupTimeout` | `30000` ms | Conservative — ZLS usually starts in under 3 s |
-| `restartOnCrash` | `true` | Recover from rare crashes mid-session |
-| `maxRestarts` | `3` | Cap restart loop on persistent failures |
+
+`restartOnCrash` and `maxRestarts` are documented in the Claude Code plugin reference but are not yet implemented in the loader on Claude Code 2.1.x — including them in the manifest fails plugin initialization with `"restartOnCrash is not yet implemented. Remove this field from the configuration."` They're omitted here until the runtime ships them.
 
 ## Gotchas
 
-- **`zls` and `zig` must be the same version.** A mismatch crashes ZLS on startup. With `restartOnCrash: true` you'll burn through `maxRestarts` per session. ZVM keeps them in lockstep — recommended.
+- **`zls` and `zig` must be the same version.** A mismatch crashes ZLS on startup, and Claude Code currently does not auto-restart the server (`restartOnCrash` is unimplemented). A crashed ZLS stays dead until the session restarts. ZVM keeps `zls` and `zig` in lockstep — recommended.
 - **`comptime`-heavy code:** ZLS cannot fully evaluate complex `comptime` expressions. The build-on-save step covers most of this gap.
 - **`build.zig.zon`:** the package manifest is mapped to the `zig` language so you get LSP support inside it. Without this mapping, `.zon` files would be opaque.
 - **Windows:** the binary is `zls.exe`, but the `command` field is just `"zls"` — the OS resolves the extension. Make sure the directory containing `zls.exe` is on `PATH`.

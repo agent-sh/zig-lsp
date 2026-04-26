@@ -1,7 +1,7 @@
 {
   "name": "zig-lsp",
   "description": "Zig language server for Claude Code (requires zls in PATH)",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "agent-sh",
     "email": "aviarchi1994@gmail.com",
