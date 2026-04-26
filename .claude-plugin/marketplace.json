@@ -11,8 +11,38 @@
   "plugins": [
     {
       "name": "zig-lsp",
+      "description": "Zig language server for Claude Code via ZLS",
+      "version": "0.1.0",
+      "author": {
+        "name": "agent-sh",
+        "email": "aviarchi1994@gmail.com",
+        "url": "https://github.com/agent-sh"
+      },
       "source": "./plugins/zig-lsp",
-      "description": "Zig language server for Claude Code via ZLS"
+      "category": "development",
+      "strict": false,
+      "lspServers": {
+        "zig": {
+          "command": "zls",
+          "extensionToLanguage": {
+            ".zig": "zig",
+            ".zon": "zig"
+          },
+          "initializationOptions": {
+            "enable_snippets": true,
+            "enable_argument_placeholders": true,
+            "enable_build_on_save": true,
+            "build_on_save_args": [],
+            "semantic_tokens": "full",
+            "inlay_hints_show_variable_type_hints": true,
+            "inlay_hints_show_parameter_name": true,
+            "prefer_ast_check_as_child_process": true
+          },
+          "startupTimeout": 30000,
+          "restartOnCrash": true,
+          "maxRestarts": 3
+        }
+      }
     }
   ]
 }

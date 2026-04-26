@@ -22,12 +22,13 @@ Claude Code's `LSP` tool dispatches to language-specific plugins. There are 11 o
 ```
 .
 ├── .claude-plugin/
-│   └── marketplace.json     # Marketplace metadata (name: agent-sh)
+│   └── marketplace.json     # Marketplace metadata + ZLS server config
+│                              (lspServers block — this is what Claude
+│                              Code actually reads to register the LSP)
 ├── plugins/
 │   └── zig-lsp/
 │       ├── .claude-plugin/
-│       │   └── plugin.json  # Plugin manifest
-│       ├── .lsp.json        # ZLS server config (the core file)
+│       │   └── plugin.json  # Plugin identity (name, version, license)
 │       └── README.md        # User-facing setup + troubleshooting
 ├── agent-knowledge/         # Research notes for contributors
 ├── .agnix.toml              # agnix config (target: claude-code)

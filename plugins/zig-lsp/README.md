@@ -66,7 +66,7 @@ Without this step, ZLS falls back to `zig ast-check`, which catches syntax and p
 
 ## Configuration
 
-The plugin ships sensible defaults. To override, edit `.lsp.json` in your local plugin directory or set workspace-level options in your project's `zls.json`. See the [ZLS schema](https://github.com/zigtools/zls/blob/master/schema.json) for the full list.
+The plugin ships sensible defaults inline in the marketplace's `lspServers` block. To override per-project, set workspace-level options in your project's `zls.json`. See the [ZLS schema](https://github.com/zigtools/zls/blob/master/schema.json) for the full list.
 
 Defaults set by this plugin:
 
