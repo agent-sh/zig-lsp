@@ -26,8 +26,14 @@
 > | Plugin in `agent-sh` marketplace, only `lspServers` in marketplace.json (no `.lsp.json`) | Silently skipped. `Checking plugin zig-lsp` appears in debug log, no `Loaded ... LSP server(s)` line follows. |
 > | Same plugin replicated under `claude-plugins-official` marketplace cache | Loads. Hardcoded path. |
 > | Plugin in `agent-sh` marketplace WITH `.lsp.json` at plugin root → cached in install dir | **Loads.** `Loaded 1 LSP server(s) from plugin: zig-lsp`. |
+> | Plugin with `lspServers` inline in `.claude-plugin/plugin.json` (no `.lsp.json` and no marketplace.json `lspServers`) | **Also loads.** This is a third valid path the docs don't cover; `michelsciortino/dart-lsp` uses it. |
+> | Manifest with `restartOnCrash: true` or `maxRestarts: N` | **Initialization fails.** Loader logs `[ERROR] LSP server '<id>': restartOnCrash is not yet implemented. Remove this field from the configuration.` The entire LSP server is rejected, not just the field. `startupTimeout` works fine. |
 >
-> **Updated key facts (canonical):** A working third-party LSP plugin ships `.lsp.json` at the plugin root + an `lspServers` block in `.claude-plugin/marketplace.json` (kept byte-equivalent on server config) + a `plugin.json` for identity metadata + `README.md`. Binary name `zls`. Extensions `.zig` and `.zon` → language `"zig"`. Submission to the official marketplace is form-gated at <https://clau.de/plugin-directory-submission>.
+> **Updated key facts (canonical, as of v2.1.119):**
+> - Three working config locations for a third-party LSP plugin: (a) `.lsp.json` at plugin root (recommended; what we ship), (b) `lspServers` inline in `.claude-plugin/plugin.json`, (c) `lspServers` inline in `.claude-plugin/marketplace.json` for plugins under `claude-plugins-official` only.
+> - **Do not include `restartOnCrash` or `maxRestarts`** in any of these locations until Claude Code's loader implements them. `startupTimeout` is fine.
+> - Plugin needs at minimum `.claude-plugin/plugin.json` (identity), `README.md`, and one of the three config locations above.
+> - Binary name `zls`. Extensions `.zig` and `.zon` → language `"zig"`. Submission to the official marketplace is form-gated at <https://clau.de/plugin-directory-submission>.
 >
 > The sections below are kept verbatim with the original `.lsp.json`-only framing as historical record. Refer to `CONTRIBUTING.md` and `CLAUDE.md` in this repo for the corrected, currently-accurate guidance.
 

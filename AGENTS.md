@@ -27,10 +27,11 @@ None. This is a config-only plugin - no slash commands, no agents, no skills.
 
 ## Plugin shape - non-negotiables
 
-1. **For third-party LSP plugins, ship `.lsp.json` at the plugin root** (`plugins/zig-lsp/.lsp.json`). This is the file the runtime loader reads from the user's cached install. We also keep `lspServers` inline in `marketplace.json` for marketplace-UI metadata and as a backstop; both are required because official LSP plugins (typescript-lsp, rust-analyzer-lsp, etc.) load via a *separate* hardcoded path that doesn't apply to third parties. Empirically verified on Claude Code v2.1.119: with `.lsp.json` present in the cached plugin dir, `zig-lsp` registers as `Total LSP servers loaded: 3`; without it, the loader silently skips the entry even when `marketplace.json` has identical content.
-2. The `command` field is `"zls"` - a PATH-resolved binary name. Never embed an absolute path; users install the binary themselves.
-3. `extensionToLanguage` maps both `.zig` and `.zon` to language ID `"zig"`. Don't drop `.zon` - the package manifest needs LSP support.
-4. Bumping `zls` defaults: keep `.lsp.json` and the `lspServers` block in `marketplace.json` byte-equal. Update CHANGELOG and bump the plugin `version` in `plugin.json`.
+1. **For third-party LSP plugins, ship `.lsp.json` at the plugin root** (`plugins/zig-lsp/.lsp.json`). This is the file the runtime loader reads from the user's cached install. We also keep `lspServers` inline in `marketplace.json` for marketplace-UI metadata and as a backstop. Both are required because official LSP plugins (typescript-lsp, rust-analyzer-lsp, etc.) load via a *separate* hardcoded path that doesn't apply to third parties. Empirically verified on Claude Code v2.1.119: with `.lsp.json` present in the cached plugin dir, `zig-lsp` registers as `Loaded 1 LSP server(s) from plugin: zig-lsp`; without it, the loader silently skips the entry even when `marketplace.json` has identical content.
+2. **Don't include `restartOnCrash` or `maxRestarts` in `.lsp.json` or the `marketplace.json` `lspServers` block.** The plugins reference docs them, but the loader rejects them with `"restartOnCrash is not yet implemented. Remove this field from the configuration."` and the entire LSP server fails to initialize. `startupTimeout` works; the other lifecycle fields don't.
+3. The `command` field is `"zls"` - a PATH-resolved binary name. Never embed an absolute path; users install the binary themselves.
+4. `extensionToLanguage` maps both `.zig` and `.zon` to language ID `"zig"`. Don't drop `.zon` - the package manifest needs LSP support.
+5. Bumping `zls` defaults: keep `.lsp.json` and the `lspServers` block in `marketplace.json` byte-equal. Update CHANGELOG and bump the plugin `version` in `plugin.json`.
 
 ## Validation
 
