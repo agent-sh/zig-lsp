@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run agnix
-        uses: agent-sh/agnix@v0.20.1
+        uses: agent-sh/agnix@77b84aceb75fa62e3258bb07a8e13b05906549af # v0.20.1
         with:
           target: claude-code
           config: .agnix.toml
