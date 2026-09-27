@@ -49,7 +49,7 @@ Update `CHANGELOG.md` in the same PR. Keep entries under the `## [Unreleased]` h
 3. The `command` field is `"zls"` - a PATH-resolved binary name. Never embed an absolute path; users install the binary themselves.
 4. `extensionToLanguage` maps both `.zig` and `.zon` to language ID `"zig"`. Don't drop `.zon` - `build.zig.zon` needs LSP support.
 5. Keep `.lsp.json` and the `lspServers` block in `marketplace.json` byte-equal on the server config. If they drift, behavior depends on which file the loader picks up first.
-6. `CLAUDE.md` and `AGENTS.md` are mirrored byte-identically. When editing one, update the other in the same commit.
+6. Maintain project instructions in `AGENTS.md` only.
 
 ## Style
 
