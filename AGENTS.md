@@ -22,7 +22,7 @@ None. This is a config-only plugin - no slash commands, no agents, no skills.
 4. **Create PRs for non-trivial changes** - No direct pushes to main.
 5. **Always run git hooks** - Never bypass pre-commit or pre-push hooks.
 6. **Use single dash for em-dashes** - In prose, use ` - ` (single dash with spaces), never ` -- `.
-7. **Mirror CLAUDE.md and AGENTS.md byte-identically** - When editing one, update the other in the same commit.
+7. **One instruction source** - Maintain repository guidance in `AGENTS.md`.
 8. **Token efficiency** - Save tokens over decorations.
 
 ## Plugin shape - non-negotiables
@@ -49,3 +49,12 @@ CI runs `agent-sh/agnix@v0.20.1` against `.agnix.toml` on every push and PR.
 - [ZLS](https://github.com/zigtools/zls)
 - [agent-knowledge/claude-code-lsp-plugin-contribution.md](agent-knowledge/claude-code-lsp-plugin-contribution.md) - research notes for contributors
 - Part of the [agent-sh](https://github.com/agent-sh) org
+
+## Validation scope
+
+Choose checks that cover the changed behavior. For CPU-only tooling, documentation
+and configuration changes, run the relevant CPU tests, static checks and configuration
+validation. Do not require a blanket GPU gate for those changes. Require GPU
+qualification when GPU, runtime or model behavior, or related claims, change.
+Preserve applicable native, model and hardware qualification gates. CPU checks do
+not qualify GPU behavior.

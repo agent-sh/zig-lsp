@@ -38,7 +38,7 @@ Claude Code's `LSP` tool dispatches to language-specific plugins. There are 11 o
 ├── .github/workflows/       # agnix CI on push and PR
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
-├── CLAUDE.md / AGENTS.md    # Project memory (byte-identical)
+├── AGENTS.md                # Project instructions
 ├── LICENSE
 └── README.md
 ```
