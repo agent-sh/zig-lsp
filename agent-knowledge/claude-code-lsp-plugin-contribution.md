@@ -51,7 +51,7 @@
 
 ## Prerequisites
 
-**What you already know** (covered in your reference doc at `../tools/agent-knowledge/lsp-tool-design-across-harnesses.md`):
+**What you already know** (covered in your reference doc at [lsp-tool-design-across-harnesses.md](https://github.com/avifenesh/tools/blob/main/agent-knowledge/lsp-tool-design-across-harnesses.md) in avifenesh/tools):
 - The `LSP` tool dispatch model — one tool, plugin-per-language manifest
 - The harness/plugin boundary: harness owns lifecycle, plugin owns config
 - Manifest field names and the `gopls` example
