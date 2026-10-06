@@ -28,7 +28,7 @@ claude plugin validate .                   # marketplace manifest
 agnix --target claude-code                 # config drift across the repo
 ```
 
-`agnix` runs in CI via `agent-sh/agnix@v0.20.1` against `.agnix.toml`. The CI gate is `--fail-on-error`, so warnings don't fail builds but errors do.
+`agnix` runs in CI via `agent-sh/agnix@v0.56.5` against `.agnix.toml`. The CI gate is `--fail-on-error`, so warnings don't fail builds but errors do.
 
 ## What changes need a version bump
 

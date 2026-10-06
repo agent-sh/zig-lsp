@@ -41,7 +41,7 @@ None. This is a config-only plugin - no slash commands, no agents, no skills.
 | Marketplace manifest | `claude plugin validate .` | local |
 | Agent config drift | `agnix --target claude-code` | local + CI |
 
-CI runs `agent-sh/agnix@v0.20.1` against `.agnix.toml` on every push and PR.
+CI runs `agent-sh/agnix@v0.56.5` against `.agnix.toml` on every push and PR.
 
 ## References
 
@@ -49,12 +49,3 @@ CI runs `agent-sh/agnix@v0.20.1` against `.agnix.toml` on every push and PR.
 - [ZLS](https://github.com/zigtools/zls)
 - [agent-knowledge/claude-code-lsp-plugin-contribution.md](agent-knowledge/claude-code-lsp-plugin-contribution.md) - research notes for contributors
 - Part of the [agent-sh](https://github.com/agent-sh) org
-
-## Validation scope
-
-Choose checks that cover the changed behavior. For CPU-only tooling, documentation
-and configuration changes, run the relevant CPU tests, static checks and configuration
-validation. Do not require a blanket GPU gate for those changes. Require GPU
-qualification when GPU, runtime or model behavior, or related claims, change.
-Preserve applicable native, model and hardware qualification gates. CPU checks do
-not qualify GPU behavior.

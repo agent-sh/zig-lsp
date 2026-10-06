@@ -1,7 +1,7 @@
 # Agent Knowledge Base
 
 > Learning guides created by /learn. Reference these when answering questions about listed topics.
-> Deeper LSP-design reference (harness architecture, cross-tool comparison) lives at: `../tools/agent-knowledge/lsp-tool-design-across-harnesses.md`
+> Deeper LSP-design reference (harness architecture, cross-tool comparison) lives at: [lsp-tool-design-across-harnesses.md](https://github.com/avifenesh/tools/blob/main/agent-knowledge/lsp-tool-design-across-harnesses.md) in avifenesh/tools
 
 ## Available Topics
 
@@ -41,5 +41,5 @@ Use this knowledge when user asks about:
 1. Check if user question matches a topic above
 2. Read the relevant guide file
 3. Answer based on synthesized knowledge
-4. For LSP harness/architecture questions, also reference `../tools/agent-knowledge/lsp-tool-design-across-harnesses.md`
+4. For LSP harness/architecture questions, also reference [lsp-tool-design-across-harnesses.md](https://github.com/avifenesh/tools/blob/main/agent-knowledge/lsp-tool-design-across-harnesses.md) in avifenesh/tools
 5. Cite the guide if user asks for sources
