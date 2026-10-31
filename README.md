@@ -15,7 +15,7 @@ You must have `zls` installed and on `PATH`. See [`plugins/zig-lsp/README.md`](p
 
 ## What this is
 
-Claude Code's `LSP` tool dispatches to language-specific plugins. There are 11 official LSP plugins shipped by Anthropic; Zig isn't one of them yet. This plugin fills the gap with a thin manifest pointing at user-installed `zls`.
+Claude Code's `LSP` tool dispatches to language-specific plugins. There are 12 official LSP plugins shipped by Anthropic; Zig isn't one of them yet. This plugin fills the gap with a thin manifest pointing at user-installed `zls`.
 
 ## Layout
 
@@ -23,8 +23,8 @@ Claude Code's `LSP` tool dispatches to language-specific plugins. There are 11 o
 .
 ├── .claude-plugin/
 │   └── marketplace.json     # Marketplace metadata + ZLS server config
-│                              (lspServers block — this is what Claude
-│                              Code actually reads to register the LSP)
+│                              (lspServers block - marketplace UI
+│                              metadata, mirrors .lsp.json)
 ├── plugins/
 │   └── zig-lsp/
 │       ├── .claude-plugin/

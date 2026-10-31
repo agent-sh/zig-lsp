@@ -54,19 +54,21 @@ The plugin sets `enable_build_on_save: true`. To get compilation-level diagnosti
 ```zig
 const exe_check = b.addExecutable(.{
     .name = "myapp",
-    .root_source_file = b.path("src/main.zig"),
-    .target = target,
-    .optimize = optimize,
+    .root_module = b.createModule(.{
+        .root_source_file = b.path("src/main.zig"),
+        .target = target,
+        .optimize = optimize,
+    }),
 });
 const check = b.step("check", "Check if myapp compiles");
 check.dependOn(&exe_check.step);
 ```
 
-Without this step, ZLS falls back to `zig ast-check`, which catches syntax and parser errors only — no type errors.
+Without a `check` step, build-on-save runs the default `install` step, which compiles and writes artifacts. Without a `build.zig`, ZLS only runs `zig ast-check`: syntax and parser errors, no type errors.
 
 ## Configuration
 
-The plugin ships sensible defaults inline in the marketplace's `lspServers` block. To override per-project, set workspace-level options in your project's `zls.json`. See the [ZLS schema](https://github.com/zigtools/zls/blob/master/schema.json) for the full list.
+The plugin ships its defaults as `initializationOptions` in `.lsp.json` (mirrored in the marketplace's `lspServers` block). ZLS gives `initializationOptions` priority over `zls.json`, so these eight options cannot be overridden there. Other options go in `zls.json` in your ZLS config directory (`zls env` prints the path). See the [ZLS schema](https://github.com/zigtools/zls/blob/master/schema.json) for the full list.
 
 Defaults set by this plugin:
 
@@ -81,11 +83,11 @@ Defaults set by this plugin:
 | `prefer_ast_check_as_child_process` | `true` | Faster, more accurate parser-level errors |
 | `startupTimeout` | `30000` ms | Conservative — ZLS usually starts in under 3 s |
 
-`restartOnCrash` and `maxRestarts` are documented in the Claude Code plugin reference but are not yet implemented in the loader on Claude Code 2.1.x — including them in the manifest fails plugin initialization with `"restartOnCrash is not yet implemented. Remove this field from the configuration."` They're omitted here until the runtime ships them.
+`restartOnCrash` and `maxRestarts` are left unset, so Claude Code's defaults apply: a crashed server restarts, up to 3 times. Early Claude Code 2.1 loaders rejected both fields with `"restartOnCrash is not yet implemented. Remove this field from the configuration."`
 
 ## Gotchas
 
-- **`zls` and `zig` must be the same version.** A mismatch crashes ZLS on startup, and Claude Code currently does not auto-restart the server (`restartOnCrash` is unimplemented). A crashed ZLS stays dead until the session restarts. ZVM keeps `zls` and `zig` in lockstep — recommended.
+- **`zls` and `zig` must be the same version.** On a mismatch ZLS warns that it does not support your Zig version, and analysis and builds can break. Claude Code restarts a crashed ZLS up to 3 times, then leaves it stopped until the session restarts. ZVM keeps `zls` and `zig` in lockstep - recommended.
 - **`comptime`-heavy code:** ZLS cannot fully evaluate complex `comptime` expressions. The build-on-save step covers most of this gap.
 - **`build.zig.zon`:** the package manifest is mapped to the `zig` language so you get LSP support inside it. Without this mapping, `.zon` files would be opaque.
 - **Windows:** the binary is `zls.exe`, but the `command` field is just `"zls"` — the OS resolves the extension. Make sure the directory containing `zls.exe` is on `PATH`.
@@ -100,13 +102,7 @@ claude --debug
 
 Look for `Total LSP servers loaded:` in the output. If `0`, the plugin didn't pick up `.lsp.json`.
 
-Enable LSP-specific logs:
-
-```sh
-claude --enable-lsp-logging
-```
-
-Logs land at `~/.claude/debug/lsp-*.log`.
+The debug log lands at `~/.claude/debug/<session-id>.txt`; `~/.claude/debug/latest` points at the current one.
 
 Inside Claude Code, the `/plugin` panel's **Installed** and **Errors** tabs are the primary diagnostic surface.
 

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI pins `agent-sh/agnix` v0.56.5 (was v0.20.1).
 - `AGENTS.md` drops a copied "Validation scope" paragraph about GPU and model qualification; this repo has no GPU or model behavior.
 - `agent-knowledge/AGENTS.md` links the LSP design reference on GitHub instead of a dead `../tools/` relative path.
+- READMEs match current Claude Code and ZLS: crashed servers restart (up to 3 times), `--enable-lsp-logging` is gone, `initializationOptions` take priority over `zls.json`, the `check` step example uses `root_module`, and Anthropic ships 12 official LSP plugins.
 
 ## [0.1.1] - 2026-04-26
 
